@@ -1,12 +1,8 @@
 import TelegramBot from "node-telegram-bot-api";
-import express from "express";
-import cors from "cors";
-const token = "7615919255:AAEmPdiHWDHU7oJAb6sZQ0xib3C-ji9cNLg";
+import { config } from "dotenv";
+config();
 
-const app = express();
-
-app.use(express.json());
-app.use(cors());
+const token = process.env.BOT_TOKEN as string;
 
 const bot = new TelegramBot(token, { polling: true });
 
@@ -16,7 +12,7 @@ bot.on("message", async (msg) => {
   console.log(msg.location);
   if (msg.location) {
     const { latitude, longitude } = msg.location;
-    const apiKey = "bbbcfeca62893678f22cd3be3365d5fb"; // Replace with your OpenWeatherMap API key
+    const apiKey = process.env.API_KEY; // Replace with your OpenWeatherMap API key
     const APIUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`;
     console.log(`APIUrl `, APIUrl);
     try {
@@ -32,7 +28,7 @@ bot.on("message", async (msg) => {
         const sunSetise = new Date(data.sys.sunset * 1000);
         await bot.sendMessage(
           chatId,
-          `Погода в ${location}: 
+          `Погода в ${location}:
         Температура воздуха: ${temp}
         Ощущается как: ${feelsLike}
         Скорость ветра: ${weendSpeed}м/c
