@@ -34,6 +34,15 @@ bot.on("message", async (msg) => {
     const file = await bot.getFile(video.file_id);
     const name = file.file_path?.split("/").at(-1)!;
 
+    fs.readdir(".", (err, files) => {
+      for (const f of files) {
+        const ext = f.split(".").at(-1);
+        if (ext === "mp4") {
+          fs.unlinkSync(f);
+        }
+      }
+    });
+
     await bot.downloadFile(video.file_id, "");
     const deepgramApiKey = process.env.DEEPGRAM as string;
     const deepgram = createClient(deepgramApiKey);
